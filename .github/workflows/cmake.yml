@@ -21,7 +21,7 @@ jobs:
              echo cmake make dir
       
       - name: Install packages
-        run: sudo apt install gcc-multilib
+        run: sudo apt install g++-multilib
   
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
