@@ -41,12 +41,23 @@ jobs:
         shell: bash
         # Execute the build.  You can specify a specific target with "--target <NAME>"
         run: cmake --build . 
-
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+        
+      # Output build file info to confirm it is 32 bit
+      - name: Run file command
         run: |
           file myexample
-  
+          
+      - name: Create Artifact
+        run: |
+          mkdir artf
+          cp build/myexample artf/solution
+        
+      - name: Publish
+        uses: actions/upload-artifact@v3
+        with:
+          name: 32-bit build
+          path: artf
+        
   build64:
     runs-on: ubuntu-latest
     
