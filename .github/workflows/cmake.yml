@@ -52,7 +52,7 @@ jobs:
           path: artf
         
   build64:
-    runs-on: [self-hosted, windows]
+    runs-on: [self-hosted, Linux]
     steps:
         # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
         - uses: actions/checkout@v3
