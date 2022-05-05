@@ -30,6 +30,8 @@ jobs:
         # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-10
 
+      - name: Set to 32 bit
+        run: cmake -D CMAKE_CXX_FLAGS=-m32 . && make
 
       - name: Build
         working-directory: ${{github.workspace}}/build
@@ -40,8 +42,7 @@ jobs:
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          file myexample
   
   build64:
     runs-on: ubuntu-latest
