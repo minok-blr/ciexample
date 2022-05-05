@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       
       - name: Create Build Directory
@@ -24,13 +23,8 @@ jobs:
         run: sudo apt install g++-multilib
   
       - name: Configure CMake
-        # Use a bash shell so we can use the same syntax for environment variable
-        # access regardless of the host operating system
         shell: bash
         working-directory: ${{github.workspace}}/build
-        # Note the current convention is to use the -S and -B options here to specify source 
-        # and build directories, but this is only available with CMake 3.13 and higher.  
-        # The CMake binaries on the Github Actions machines are (as of this writing) 3.12
         run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-10
 
       - name: Set to 32 bit
@@ -39,7 +33,6 @@ jobs:
       - name: Build
         working-directory: ${{github.workspace}}/build
         shell: bash
-        # Execute the build.  You can specify a specific target with "--target <NAME>"
         run: cmake --build . 
         
       # Output build file info to confirm it is 32 bit
@@ -59,9 +52,44 @@ jobs:
           path: artf
         
   build64:
-    runs-on: ubuntu-latest
-    
+    runs-on: [self-hosted, windows]
     steps:
-      - uses: actions/checkout@v3
-      - name: Run a one-line script
-        run: echo Hello, world!
+        # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+        - uses: actions/checkout@v3
+
+        - name: Create Build Directory
+          run: cmake -E make_directory ${{runner.workspace}}/bld
+               echo cmake make dir
+
+        - name: Install packages
+          run: sudo apt install g++-multilib
+
+        - name: Configure CMake
+          shell: bash
+          working-directory: ${{runner.workspace}}/bld
+          run: cmake $GITHUB_WORKSPACE -DCMAKE_BUILD_TYPE=$BUILD_TYPE -DCMAKE_CXX_COMPILER=g++-10
+
+        - name: Set to 64 bit
+          run: cmake -D CMAKE_CXX_FLAGS=-m64 . && make
+
+        - name: Build
+          working-directory: ${{runner.workspace}}/bld
+          shell: bash
+          run: cmake --build . 
+
+        # Output build file info to confirm it is 32 bit
+        - name: Run file command
+          run: |
+            file myexample
+
+        - name: Create Artifact
+          run: |
+            mkdir artf
+            cp build/myexample artf/solution64
+
+        - name: Publish
+          uses: actions/upload-artifact@v3
+          with:
+            name: 64-bit build
+            path: artf
+
