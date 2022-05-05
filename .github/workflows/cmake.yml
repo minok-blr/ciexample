@@ -19,7 +19,10 @@ jobs:
       - name: Create Build Directory
         run: cmake -E make_directory ${{github.workspace}}/build
              echo cmake make dir
-
+      
+      - name: Install packages
+        run: sudo apt install gcc-multilib
+  
       - name: Configure CMake
         # Use a bash shell so we can use the same syntax for environment variable
         # access regardless of the host operating system
