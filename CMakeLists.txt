@@ -9,4 +9,4 @@ project(MyProject
     CXX
 )
 
-add_executable(myexample main.cpp)
+add_executable(myexample src/main.cpp)
